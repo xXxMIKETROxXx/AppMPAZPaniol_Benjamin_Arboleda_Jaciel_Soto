@@ -1,0 +1,38 @@
+services:
+  postgres-db:
+    image: postgres:16-alpine
+    container_name: postgres_paniol
+    restart: always
+    environment:
+      POSTGRES_DB: panioldb
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d panioldb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  solicitudes-api:
+    build: .
+    container_name: solicitudes_api
+    restart: always
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: 8080
+      DB_HOST: postgres-db
+      DB_PORT: 5432
+      DB_NAME: panioldb
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+volumes:
+  postgres_data:
