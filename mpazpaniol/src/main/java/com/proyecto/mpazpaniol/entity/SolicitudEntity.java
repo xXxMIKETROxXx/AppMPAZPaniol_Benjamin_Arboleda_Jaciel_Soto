@@ -13,7 +13,7 @@ public class SolicitudEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // Clave primaria autoincrementable en PostgreSQL
 
-    private Long equipoId;          // ID del equipo solicitado en el pañol
+    private String equipoId;        // ID compartido con los microservicios de equipos e inventario
     private String solicitanteEmail; // Correo institucional del docente o alumno
     private String cargo;            // Ej: "Docente", "Alumnos"
     private String sala;             // Ej: "Sala 402"
@@ -30,8 +30,8 @@ public class SolicitudEntity {
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public Long getEquipoId() { return equipoId; }
-    public void setEquipoId(Long equipoId) { this.equipoId = equipoId; }
+    public String getEquipoId() { return equipoId; }
+    public void setEquipoId(String equipoId) { this.equipoId = equipoId; }
 
     public String getSolicitanteEmail() { return solicitanteEmail; }
     public void setSolicitanteEmail(String solicitanteEmail) { this.solicitanteEmail = solicitanteEmail; }

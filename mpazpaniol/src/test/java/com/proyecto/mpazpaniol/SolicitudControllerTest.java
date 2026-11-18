@@ -41,7 +41,7 @@ public class SolicitudControllerTest {
     void setUp() {
         solicitudBase = new SolicitudEntity();
         solicitudBase.setId(1L);
-        solicitudBase.setEquipoId(101L);
+        solicitudBase.setEquipoId("1");
         solicitudBase.setSolicitanteEmail("jaciel.soto@duocuc.cl");
         solicitudBase.setCargo("Alumnos");
         solicitudBase.setSala("Sala 402");
@@ -77,7 +77,7 @@ public class SolicitudControllerTest {
 
         // Creamos una solicitud intentando enviarla con otro estado para probar la regla de negocio
         SolicitudEntity nuevaSolicitud = new SolicitudEntity();
-        nuevaSolicitud.setEquipoId(101L);
+        nuevaSolicitud.setEquipoId("1");
         nuevaSolicitud.setSolicitanteEmail("docente@duocuc.cl");
         nuevaSolicitud.setEstado("ACEPTADA"); // El controlador debe sobrescribir esto a PENDIENTE
 
@@ -109,6 +109,17 @@ public class SolicitudControllerTest {
     }
 
     @Test
+    @DisplayName("PUT /api/solicitudes/{id}/estado - Debe responder 404 cuando no existe")
+    void testCambiarEstadoSolicitudInexistente() {
+        when(solicitudRepository.findById(99L)).thenReturn(Optional.empty());
+
+        ResponseEntity<?> respuesta = solicitudController.cambiarEstado(99L, "ACEPTADA");
+
+        assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
+        verify(solicitudRepository, never()).save(any(SolicitudEntity.class));
+    }
+
+    @Test
     @DisplayName("PUT /api/solicitudes/{id}/rechazar - Debe rechazar con 400 Bad Request si el motivo está vacío")
     void testRechazarSolicitudSinMotivo() {
         // 1. Arrange & 2. Act: Enviamos espacios en blanco como motivo
@@ -137,5 +148,16 @@ public class SolicitudControllerTest {
         assertEquals("RECHAZADA", cuerpo.getEstado());
         assertEquals("No hay stock disponible", cuerpo.getMotivoRechazo());
         verify(solicitudRepository, times(1)).save(solicitudBase);
+    }
+
+    @Test
+    @DisplayName("PUT /api/solicitudes/{id}/rechazar - Debe responder 404 cuando no existe")
+    void testRechazarSolicitudInexistente() {
+        when(solicitudRepository.findById(99L)).thenReturn(Optional.empty());
+
+        ResponseEntity<?> respuesta = solicitudController.rechazarSolicitud(99L, "No hay stock");
+
+        assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
+        verify(solicitudRepository, never()).save(any(SolicitudEntity.class));
     }
 }
