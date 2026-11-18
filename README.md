@@ -1,2 +1,18 @@
 # AppMPAZPaniol_Benjamin_Arboleda_Jaciel_Soto
 BACKEND_DE_PROYECTO-MPAZ
+
+## Microservicio Solicitudes (Jaciel)
+
+Administra las solicitudes de prestamo. La API ofrece `GET /api/solicitudes`, `POST /api/solicitudes`, `PUT /api/solicitudes/{id}/estado?nuevoEstado=...` y `PUT /api/solicitudes/{id}/rechazar?motivo=...`.
+
+## Microservicio Inventario
+
+Administra el inventario de equipos, sus stocks, estados y ubicaciones. La API ofrece `GET /api/inventario`, `GET /api/inventario/{equipoId}`, `POST /api/inventario`, `PUT /api/inventario/{equipoId}`, `PATCH /api/inventario/{equipoId}/estado?valor=...`, `PATCH /api/inventario/{equipoId}/stock?valor=...` y `PATCH /api/inventario/{equipoId}/baja`.
+
+Para ejecutarlo con Docker, entra en `inventario/`, copia `.env.example` como `.env`, reemplaza el valor de ejemplo de `DB_PASSWORD` por una clave local y ejecuta `docker compose up --build`. La API queda disponible en `http://localhost:8081/api/inventario`; PostgreSQL se publica en el puerto `5435`.
+
+## Microservicio Equipos
+
+Administra el catalogo de equipos y permite consultarlos por identificador o categoria. La API ofrece `GET /api/equipos`, `GET /api/equipos/{id}`, `GET /api/equipos/categoria/{categoria}`, `POST /api/equipos` y `PUT /api/equipos/{id}`.
+
+Para ejecutarlo con Docker, entra en `equipos/`, copia `.env.example` como `.env`, reemplaza el valor de ejemplo de `DB_PASSWORD` por una clave local y ejecuta `docker compose up --build`. La API queda disponible en `http://localhost:8082/api/equipos`; PostgreSQL se publica en el puerto `5436`.
